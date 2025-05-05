@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IOT WATER POLLUTION SENSOR</title>
+
+</head>
+<style>
+    #sample {
+        width: 300px;
+        padding: 20px;
+        background-color: #222;
+        color: #fff;
+        font-family: Arial, sans-serif;
+        border-radius: 10px;
+    }
+</style>
+<body>
+    <h1>IOT Water Sensor Readings</h1>
+    <div id="sample">
+        <p><strong>Temperature:</strong> <span id="temp">--</span> °C</p>
+        <p><strong>Humidity:</strong> <span id="humidity">--</span> %</p>
+        <p><strong>Water Level:</strong> <span id="water">--</span> cm</p>
+        <p><strong>Status:</strong> <span id="status">--</span></p>
+    </div>
+
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+
+
+    <script>
+        const socket = io();
+
+        socket.on('connect', () => {
+            console.log("✅ Connected to server via Socket.io");
+        });
+
+        socket.on('sensorData', function(data) {
+            document.getElementById('temp').innerText = data.temperature;
+            document.getElementById('humidity').innerText = data.humidity;
+            document.getElementById('water').innerText = data.waterLevel;
+
+            let status = "Safe";
+            if (data.waterLevel >= 30) status = "Danger";
+            else if (data.waterLevel >= 15) status = "Warning";
+            document.getElementById('status').innerText = status;
+        });
+    </script>
+    
+</body>
+</html>
