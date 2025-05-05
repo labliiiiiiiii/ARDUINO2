@@ -4,25 +4,69 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IOT WATER POLLUTION SENSOR</title>
+    <link rel="stylesheet" href="style.css"/>
 
 </head>
-<style>
-    #sample {
-        width: 300px;
-        padding: 20px;
-        background-color: #222;
-        color: #fff;
-        font-family: Arial, sans-serif;
-        border-radius: 10px;
-    }
-</style>
+
 <body>
-    <h1>IOT Water Sensor Readings</h1>
+    <h1>IOT Water Sensor Reading</h1>
     <div id="sample">
-        <p><strong>Temperature:</strong> <span id="temp">--</span> °C</p>
-        <p><strong>Humidity:</strong> <span id="humidity">--</span> %</p>
-        <p><strong>Water Level:</strong> <span id="water">--</span> cm</p>
-        <p><strong>Status:</strong> <span id="status">--</span></p>
+        <div class="measurement-box glass">
+            <h2>Temperature</h2>
+            <p id="temp">
+                <div class="gauge-container">
+                    <div class="gauge" style="--percent: 75">
+                    <div class="gauge-bg"></div>
+                    <div class="gauge-fill"></div>
+                    <div class="gauge-center">
+                        <span class="gauge-label">75%</span>
+                    </div>
+                    </div>
+                </div>
+            </p>
+        </div>
+        <div class="measurement-box glass">
+            <h2>Humidity</h2>
+            <p id="humidity">
+                <div class="gauge-container">
+                    <div class="gauge" style="--percent: 75">
+                    <div class="gauge-bg"></div>
+                    <div class="gauge-fill"></div>
+                    <div class="gauge-center">
+                        <span class="gauge-label">75%</span>
+                    </div>
+                    </div>
+                </div>
+            </p>
+        </div>
+        <div class="measurement-box glass">
+            <h2>Water Level</h2>
+            <p id="water">
+                <div class="gauge-container">
+                    <div class="gauge" style="--percent: 75">
+                    <div class="gauge-bg"></div>
+                    <div class="gauge-fill"></div>
+                    <div class="gauge-center">
+                        <span class="gauge-label">75%</span>
+                    </div>
+                    </div>
+                </div>
+            </p>
+        </div>
+        <div class="measurement-box glass">
+            <h2>Status</h2>
+            <p id="status">
+                <div class="gauge-container">
+                    <div class="gauge" style="--percent: 75">
+                    <div class="gauge-bg"></div>
+                    <div class="gauge-fill"></div>
+                    <div class="gauge-center">
+                        <span class="gauge-label">75%</span>
+                    </div>
+                    </div>
+                </div>
+            </p>
+        </div>
     </div>
 
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
