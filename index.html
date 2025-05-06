@@ -94,22 +94,22 @@
                 gauge.style.setProperty('--start-color', newColor);
                 label.textContent = `${value}%`;
     
-                // Set qualitative label
-                if (remark) {
-                    if (value >= 95) {
-                        remark.textContent = "Excellent - Drinkable";
-                    } else if (value >= 80) {
-                        remark.textContent = "Good - Generally Safe";
-                    } else if (value >= 60) {
-                        remark.textContent = "Fair - Needs Treatment";
-                    } else if (value >= 40) {
-                        remark.textContent = "Poor - Not Safe";
-                    } else if (value >= 20) {
-                        remark.textContent = "Bad - Highly Polluted";
-                    } else {
-                        remark.textContent = "Very Bad - Toxic Level";
-                    }
-                }
+                // // Set qualitative label
+                // if (remark) {
+                //     if (value >= 95) {
+                //         remark.textContent = "Excellent - Drinkable";
+                //     } else if (value >= 80) {
+                //         remark.textContent = "Good - Generally Safe";
+                //     } else if (value >= 60) {
+                //         remark.textContent = "Fair - Needs Treatment";
+                //     } else if (value >= 40) {
+                //         remark.textContent = "Poor - Not Safe";
+                //     } else if (value >= 20) {
+                //         remark.textContent = "Bad - Highly Polluted";
+                //     } else {
+                //         remark.textContent = "Very Bad - Toxic Level";
+                //     }
+                // }
             }
         }
     
