@@ -101,12 +101,25 @@
         socket.on('sensorData', function (data) {
             console.log("📊 Received data:", data);
     
-            const temperature = data.temperature != null ? Number(data.temperature.toFixed(1)) : null;
-            const humidity = data.humidity != null ? Number(data.humidity.toFixed(1)) : null;
-            const ntu = data.turbidityNTU != null ? Number(data.turbidityNTU.toFixed(1)) : null;
+            const tempElem = document.getElementById('temp');
+            if (tempElem) tempElem.innerText = data.temperature?.toFixed(1) ?? "--";
 
-            if (temperature !== null) updateGauge('temp', temperature, `${temperature}°C`);
-            if (humidity !== null) updateGauge('humidity', humidity, `${humidity}%`);
+            const humidityElem = document.getElementById('humidity');
+            if (humidityElem) humidityElem.innerText = data.humidity?.toFixed(1) ?? "--";
+
+            const qualityElem = document.getElementById('quality');
+            if (qualityElem) qualityElem.innerText = data.waterQuality?.toFixed(1) ?? "--";
+
+            const voltageElem = document.getElementById('voltage');
+            if (voltageElem) voltageElem.innerText = data.turbidityVoltage?.toFixed(2) ?? "--";
+
+            const ntuElem = document.getElementById('ntu');
+            if (ntuElem) ntuElem.innerText = data.turbidityNTU?.toFixed(1) ?? "--";
+
+    
+             // Update gauges
+            if (tempElem !== null) updateGauge('temp', temperature);
+            if (humidityElem !== null) updateGauge('humidity', humidity);
 
             // Compute clarity for water quality
             if (ntuElem !== null) {
