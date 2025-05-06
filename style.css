@@ -1,61 +1,94 @@
 .gauge-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 1rem;
-  }
-  
-  .gauge {
-    position: relative;
-    width: 160px;
-    height: 160px;
-    border-radius: 50%;
-    --start-color: #375040;
-    --bg-color: #e5e7eb;
-    --percent: 50;
-  }
-  
-  .gauge-bg,
-  .gauge-fill {
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-  }
-  
-  .gauge-bg {
-    background: conic-gradient(var(--bg-color) 100%);
-  }
-  
-  .gauge-fill {
-    background: conic-gradient(
-      var(--start-color) calc(var(--percent) * 1%),
-      var(--bg-color) 0
-    );
-    transition: background 0.5s ease;
-  }
-  
-  .gauge-center {
-    position: absolute;
-    inset: 20px;
-    background: white;
-    border-radius: 50%;
-    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+  width: 160px;
+  height: 160px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto; /* Optional: centers it in parent horizontally */
+}
+
+
+.gauge {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  --percent: 0;
+  --bg-color: #e5e7eb;
+  --base-hue: 140; /* default green */
+  --start-color: hsl(var(--base-hue), 60%, 70%);
+  transition: all 0.1s ease; /* Smooth transition for all changes */
+}
+
+/* Full circular background */
+.gauge-bg,
+.gauge-fill {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  mask-image: radial-gradient(circle at center, transparent 50%, black 51%);
+  -webkit-mask-image: radial-gradient(circle at center, transparent 50%, black 51%);
+}
+
+/* Static background ring */
+.gauge-bg {
+  background: conic-gradient(var(--bg-color) 100%);
+}
+
+/* Dynamic fill ring with transition */
+.gauge-fill {
+  background: conic-gradient(
+    var(--start-color) calc(var(--percent) * 1%),
+    var(--bg-color) 0
+  );
+  transition: background 0.5s ease, filter 0.5s ease; /* Add transition to background and filter */
+}
+
+/* Center label */
+.gauge-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #333;
+  z-index: 1;
+}
+
   
   .gauge-label {
     font-size: 1.8rem;
     font-weight: bold;
-    color: #333;
+    color: white;
+  }
+
+  .temp-gauge {
+    --base-hue: 0; /* Red */
+    --start-color: hsl(var(--base-hue), 100%, 40%); /* Darker Red */
+  }
+  
+  .humid-gauge {
+    --base-hue: 210; /* Blue */
+    --start-color: hsl(var(--base-hue), 100%, 50%); /* Blue tone */
+  }
+  
+  .water-gauge {
+    --base-hue: 120; /* Green */
+    --start-color: hsl(var(--base-hue), 60%, 50%); /* Green tone */
+  }
+  
+  
+  
+  .status-gauge {
+    --base-hue: 20; /* reddish-orange */
   }
 
   /* Gradient background */
   body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+    background: linear-gradient(135deg, #2a256a, #56509d, #606098);
     color: white;
     min-height: 100vh;
     padding: 2rem;
@@ -67,42 +100,54 @@
   }
   
   
-  /* Glass effect for boxes */
-  .glass {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 16px;
-    padding: 1.5rem;
-    margin: 1rem;
-    width: 250px;
-    text-align: center;
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    transition: all 0.3s ease-in-out;
-  }
-  
-  
-  .measurement-box h2 {
-    margin-bottom: 0.5rem;
-    font-size: 1.2rem;
-  }
-  
-  .measurement-box p {
-    font-size: 2rem;
-    margin: 0;
-  }
-  
-  #sample {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 2rem;
-  }
+/* Glass effect for boxes */
+.glass {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin: 1rem;
+  width: 90%; /* Width for cards */
+  text-align: center;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  transition: all 0.3s ease-in-out;
+}
 
-  .water-remark {
-    text-align: center;
-    margin-top: 10px;
-    font-weight: bold;
-    font-size: 1.1em;
-  }
+.measurement-box h2 {
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+}
+
+.measurement-box p {
+  font-size: 2rem;
+  margin: 0;
+}
+
+#sample {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 columns in the first row */
+  grid-template-rows: auto auto; /* Allow for 2 rows */
+  gap: 50px 100px; /* Vertical gap of 50px, Horizontal gap of 100px */
+  justify-items: center;
+  margin-top: 2rem; /* Optional: adds some space at the top */
+}
+
+.measurement-box {
+  grid-column: span 1; /* Make the first two cards take one column each */
+}
+
+.water-card {
+  grid-column: span 2; /* Make the water card span both columns */
+  width: 40%;
+}
+
+.water-remark {
+  text-align: center;
+  margin-top: 10px;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+
