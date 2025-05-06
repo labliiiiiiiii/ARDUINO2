@@ -82,7 +82,7 @@
             const container = document.getElementById(id);
             const gauge = container.querySelector('.gauge');
             const label = container.querySelector('.gauge-label');
-            const remark = document.getElementById("waterQualityRemark");
+
     
             if (gauge && label) {
                 gauge.style.setProperty('--percent', value);
@@ -117,44 +117,34 @@
             if (ntuElem) ntuElem.innerText = data.turbidityNTU?.toFixed(1) ?? "--";
 
     
-            // Convert NTU to clarity percentage
-            let clarityPercent = 100 - Math.min(data.turbidityNTU, 100);
-            clarityPercent = Math.max(0, Math.min(100, Number(clarityPercent.toFixed(0))));
+             // Update gauges
+            if (temperature !== null) updateGauge('temp', temperature);
+            if (humidity !== null) updateGauge('humidity', humidity);
 
-    
+            // Compute clarity for water quality
+            if (ntu !== null) {
+                let clarityPercent = 100 - Math.min(ntu, 100);
+                clarityPercent = Math.max(0, Math.min(100, Number(clarityPercent.toFixed(0))));
+                updateGauge('water', clarityPercent);
+
+            const remark = document.getElementById("waterQualityRemark");
+            if (remark) remark.innerText = status;
+            }
             // Update gauge
             updateGauge('water', clarityPercent);
     
             // Optional status label
             const statusElement = document.getElementById('status');
             let status = data.status;
-            // if (!status) {
-            //     const ntu = data.turbidityNTU;
-            //     if (ntu <= 0) {
-            //     status = "Sensor is not submerged in water";
-            // } else if (ntu >= 0 && ntu < 5) {
-            //     status = "Drinkable"; // Clearest
-            // } else if (ntu >= 5 && ntu < 25) {
-            //     status = "Clear";
-            // } else if (ntu >= 25 && ntu < 75) {
-            //     status = "Slightly Cloudy";
-            // } else if (ntu >= 75 && ntu < 125) {
-            //     status = "Cloudy";
-            // } else if (ntu >= 125 && ntu < 175) {
-            //     status = "Very Cloudy";
-            // } else if (ntu >= 175) {
-            //     status = "Highly Polluted"; // Most turbid
-            // }
 
-            // }
         if (statusElement) statusElement.innerText = status;
         });
     
         // OPTIONAL: Demo data simulation (comment out in production)
-        setInterval(() => {
-            updateGauge('temp', Math.floor(Math.random() * 101));
-            updateGauge('humidity', Math.floor(Math.random() * 101));
-        }, 2000);
+        // setInterval(() => {
+        //     updateGauge('temp', Math.floor(Math.random() * 101));
+        //     updateGauge('humidity', Math.floor(Math.random() * 101));
+        // }, 2000);
     </script>
 
       
