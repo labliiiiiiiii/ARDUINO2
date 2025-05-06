@@ -11,9 +11,9 @@
 <body>
     <h1>IOT Water Sensor Reading</h1>
     <div id="sample">
-        <div class="measurement-box glass">
+        <div class="measurement-box glass" id="temp">
             <h2>Temperature</h2>
-            <div id="temp">
+            <div >
                 <div class="gauge-container">
                     <div class="gauge temp-gauge">
                         <div class="gauge-bg"></div>
@@ -26,9 +26,9 @@
             </div>
         </div>
         
-        <div class="measurement-box glass">
+        <div class="measurement-box glass" id="humidity">
             <h2>Humidity</h2>
-            <div id="humidity">
+            <div >
                 <div class="gauge-container">
                     <div class="gauge humid-gauge">
                         <div class="gauge-bg"></div>
@@ -43,7 +43,7 @@
         
         <div class="measurement-box glass water-card" id="water">
             <h2>Water Quality</h2>
-            <div id="water">
+            <div>
                 <div class="gauge-container">
                     <div class="gauge water-gauge">
                         <div class="gauge-bg"></div>
@@ -93,23 +93,7 @@
     
                 gauge.style.setProperty('--start-color', newColor);
                 label.textContent = `${value}%`;
-    
-                // // Set qualitative label
-                // if (remark) {
-                //     if (value >= 95) {
-                //         remark.textContent = "Excellent - Drinkable";
-                //     } else if (value >= 80) {
-                //         remark.textContent = "Good - Generally Safe";
-                //     } else if (value >= 60) {
-                //         remark.textContent = "Fair - Needs Treatment";
-                //     } else if (value >= 40) {
-                //         remark.textContent = "Poor - Not Safe";
-                //     } else if (value >= 20) {
-                //         remark.textContent = "Bad - Highly Polluted";
-                //     } else {
-                //         remark.textContent = "Very Bad - Toxic Level";
-                //     }
-                // }
+
             }
         }
     
