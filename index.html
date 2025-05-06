@@ -116,13 +116,14 @@
 
                 updateGauge('water', clarityPercent, `${clarityPercent}%`);
 
-                // 🧾 Status remark
+                    // Only show water quality status
+                const status = data.status ?? "Unknown";
                 const remark = document.getElementById("waterQualityRemark");
-                if (remark) remark.innerText = `${status} (NTU: ${status})`;
+                if (remark) remark.innerText = status;
 
                 // Optional raw NTU display
                 const ntuElem = document.getElementById('ntu');
-                if (ntuElem) ntuElem.innerText = `${status}`;
+                if (ntuElem) ntuElem.innerText = `${ntu}`;
             }
 
             // Optional voltage display
