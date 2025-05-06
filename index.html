@@ -118,11 +118,11 @@
 
                 // 🧾 Status remark
                 const remark = document.getElementById("waterQualityRemark");
-                if (remark) remark.innerText = `${status} (NTU: ${remark})`;
+                if (remark) remark.innerText = `${status} (NTU: ${status})`;
 
                 // Optional raw NTU display
                 const ntuElem = document.getElementById('ntu');
-                if (ntuElem) ntuElem.innerText = `${ntu}`;
+                if (ntuElem) ntuElem.innerText = `${status}`;
             }
 
             // Optional voltage display
