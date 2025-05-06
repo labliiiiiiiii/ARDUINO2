@@ -118,11 +118,11 @@
 
     
              // Update gauges
-            if (temperature !== null) updateGauge('temp', temperature);
-            if (humidity !== null) updateGauge('humidity', humidity);
+            if (tempElem !== null) updateGauge('temp', temperature);
+            if (humidityElem !== null) updateGauge('humidity', humidity);
 
             // Compute clarity for water quality
-            if (ntu !== null) {
+            if (ntuElem !== null) {
                 let clarityPercent = 100 - Math.min(ntu, 100);
                 clarityPercent = Math.max(0, Math.min(100, Number(clarityPercent.toFixed(0))));
                 updateGauge('water', clarityPercent);
