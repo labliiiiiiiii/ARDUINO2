@@ -54,7 +54,7 @@
                     </div>
                 </div>
                 <div class="water-remark">
-                    <span id="status">Evaluating...</span>
+                    <span id="waterQualityRemark">Evaluating...</span>
                 </div>
             </div>
         </div>
@@ -118,7 +118,7 @@
 
                 // 🧾 Status remark
                 const remark = document.getElementById("waterQualityRemark");
-                if (remark) remark.innerText = `${status} (NTU: ${ntu})`;
+                if (remark) remark.innerText = `${status} (NTU: ${remark})`;
 
                 // Optional raw NTU display
                 const ntuElem = document.getElementById('ntu');
