@@ -13,60 +13,47 @@
     <div id="sample">
         <div class="measurement-box glass">
             <h2>Temperature</h2>
-            <p id="temp">
-                <div class="gauge-container">
-                    <div class="gauge" style="--percent: 75">
+            <div class="gauge-container" id="temp">
+                <div class="gauge temp-gauge">
                     <div class="gauge-bg"></div>
                     <div class="gauge-fill"></div>
                     <div class="gauge-center">
-                        <span class="gauge-label">7%</span>
-                    </div>
+                        <span class="gauge-label">0%</span>
                     </div>
                 </div>
             </p>
         </div>
         <div class="measurement-box glass">
             <h2>Humidity</h2>
-            <p id="humidity">
-                <div class="gauge-container">
-                    <div class="gauge" style="--percent: 75">
-                    <div class="gauge-bg"></div>
-                    <div class="gauge-fill">feafaef</div>
-                    <div class="gauge-center">
-                        <span class="gauge-label">75%</span>
-                    </div>
-                    </div>
-                </div>
-            </p>
-        </div>
-        <div class="measurement-box glass">
-            <h2>Water Level</h2>
-            <p id="water">
-                <div class="gauge-container">
-                    <div class="gauge" style="--percent: 75">
+            <div class="gauge-container" id="humidity">
+                <div class="gauge humid-gauge">
                     <div class="gauge-bg"></div>
                     <div class="gauge-fill"></div>
                     <div class="gauge-center">
-                        <span class="gauge-label">75%</span>
-                    </div>
+                        <span class="gauge-label">0%</span>
                     </div>
                 </div>
             </p>
         </div>
-        <div class="measurement-box glass">
-            <h2>Status</h2>
-            <p id="status">
-                <div class="gauge-container">
-                    <div class="gauge" style="--percent: 75">
+        
+        <div class="measurement-box glass water-card" id="water-container">
+            <h2>Water Quality</h2>
+            <div class="gauge-container" id="water">
+                <div class="gauge water-gauge">
                     <div class="gauge-bg"></div>
                     <div class="gauge-fill"></div>
                     <div class="gauge-center">
-                        <span class="gauge-label">75%</span>
-                    </div>
+                        <span class="gauge-label">0%</span>
                     </div>
                 </div>
-            </p>
+            </div>
+            <div class="water-remark">
+                <span id="waterQualityRemark">Evaluating...</span>
+                <span id="status" style="display: none;"></span> <!-- optional use -->
+            </div>
         </div>
+        
+          
     </div>
 
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
@@ -89,6 +76,75 @@
             else if (data.waterLevel >= 15) status = "Warning";
             document.getElementById('status').innerText = status;
         });
+    
+        // Update visual gauge dynamically
+        function updateGauge(id, value) {
+            const container = document.getElementById(id);
+            const gauge = container.querySelector('.gauge');
+            const label = container.querySelector('.gauge-label');
+            const remark = document.getElementById("waterQualityRemark");
+    
+            if (gauge && label) {
+                gauge.style.setProperty('--percent', value);
+    
+                const baseHue = getComputedStyle(gauge).getPropertyValue('--base-hue').trim();
+                const lightness = 70 - value * 0.4;
+                const newColor = `hsl(${baseHue}, 60%, ${lightness}%)`;
+    
+                gauge.style.setProperty('--start-color', newColor);
+                label.textContent = `${value}%`;
+            }
+        }
+    
+         // Handle sensor data from server
+        socket.on('sensorData', function (data) {
+            console.log("📊 Received data:", data);
+
+            document.getElementById('temp')?.innerText = data.temperature?.toFixed(1) ?? "--";
+            document.getElementById('humidity')?.innerText = data.humidity?.toFixed(1) ?? "--";
+            document.getElementById('quality')?.innerText = data.waterQuality?.toFixed(1) ?? "--";
+            document.getElementById('voltage')?.innerText = data.turbidityVoltage?.toFixed(2) ?? "--";
+            document.getElementById('ntu')?.innerText = data.turbidityNTU?.toFixed(1) ?? "--";
+
+            // Compute clarity % (optional for gauge visuals)
+            let clarityPercent = 100 - Math.min(data.turbidityNTU, 100);
+            clarityPercent = Math.max(0, Math.min(100, Number(clarityPercent.toFixed(0))));
+            updateGauge('water', clarityPercent);
+
+            // Determine water status
+            let status = "Safe";
+            const ntu = data.turbidityNTU;
+
+            if (ntu > 0 && ntu <= 1) {
+                status = "Drinkable";
+            } else if (ntu > 1 && ntu <= 5) {
+                status = "Clear";
+            } else if (ntu > 5 && ntu <= 10) {
+                status = "Slightly Cloudy";
+            } else if (ntu > 10 && ntu <= 20) {
+                status = "Cloudy";
+            } else if (ntu > 20 && ntu <= 30) {
+                status = "Very Cloudy";
+            } else if (ntu > 30) {
+                status = "Highly Polluted";
+            } else {
+                status = "Sensor is not submerged in water";
+            }
+
+            // Set the remark element
+            const remark = document.getElementById("waterQualityRemark");
+            if (remark) remark.innerText = status;
+
+            // Optionally update a general status label too
+            const statusElement = document.getElementById("status");
+            if (statusElement) statusElement.innerText = status;
+        });
+    
+        // OPTIONAL: Demo data simulation (comment out in production)
+        // setInterval(() => {
+        //     updateGauge('temp', Math.floor(Math.random() * 101));
+        //     updateGauge('humidity', Math.floor(Math.random() * 101));
+        // }, 2000);
     </script>
     
 </body>

@@ -44,20 +44,19 @@ arduinoDevices.forEach(device => {
                         jsonData.humidity = globalHumidity;
                     }
 
-                    // Console output
-                    console.log(`🌡️ Temperature: ${jsonData.temperature}°C`);
-                    console.log(`💧 Humidity: ${jsonData.humidity}%`);
-                    console.log(`🌊 Water Level: ${jsonData.waterLevel} cm`);
+                    // Set the remark element
+                    const remark = document.getElementById("waterQualityRemark");
+                    if (remark) remark.innerText = status;
 
-                    let status = "Safe";
-                    if (jsonData.waterLevel >= 30) status = "Danger";
-                    else if (jsonData.waterLevel >= 15) status = "Warning";
+                    // Optionally update a general status label too
+                    const statusElement = document.getElementById("status");
+                    if (statusElement) statusElement.innerText = status;
 
-                    console.log(`🚦 Status: ${status}`);
-                    console.log("---------------------------");
+                    // jsonData.status = status;
+                    // console.log(`🚦 Status: ${status}`);
+                    // console.log("---------------------------");
 
-                    // Emit to client
-                    io.emit("sensorData", jsonData);
+                    // io.emit("sensorData", jsonData);
                 } else {
                     console.log(`⚠️ Non-JSON Data from ${device.port}:`, data);
                 }
