@@ -144,25 +144,26 @@
             // Optional status label
             const statusElement = document.getElementById('status');
             let status = data.status;
-            if (!status) {
-                const ntu = data.turbidityNTU;
-                if (ntu >= 0 && ntu <= 1) {
-                    status = "Drinkable";
-                } else if (ntu > 1 && ntu <= 5) {
-                    status = "Clear";
-                } else if (ntu > 5 && ntu <= 25) {
-                    status = "Slightly Cloudy";
-                } else if (ntu > 25 && ntu <= 50) {
-                    status = "Cloudy";
-                } else if (ntu > 50 && ntu <= 100) {
-                    status = "Very Cloudy";
-                } else if (ntu > 100) {
-                    status = "Highly Polluted";
-                } else {
-                    status = "Sensor is not submerged in water";
-                }
-            }
-            if (statusElement) statusElement.innerText = status;
+            // if (!status) {
+            //     const ntu = data.turbidityNTU;
+            //     if (ntu <= 0) {
+            //     status = "Sensor is not submerged in water";
+            // } else if (ntu >= 0 && ntu < 5) {
+            //     status = "Drinkable"; // Clearest
+            // } else if (ntu >= 5 && ntu < 25) {
+            //     status = "Clear";
+            // } else if (ntu >= 25 && ntu < 75) {
+            //     status = "Slightly Cloudy";
+            // } else if (ntu >= 75 && ntu < 125) {
+            //     status = "Cloudy";
+            // } else if (ntu >= 125 && ntu < 175) {
+            //     status = "Very Cloudy";
+            // } else if (ntu >= 175) {
+            //     status = "Highly Polluted"; // Most turbid
+            // }
+
+            // }
+        if (statusElement) statusElement.innerText = status;
         });
     
         // OPTIONAL: Demo data simulation (comment out in production)

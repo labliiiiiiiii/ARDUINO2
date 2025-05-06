@@ -67,18 +67,18 @@ arduinoDevices.forEach(device => {
                     console.log(`🔌 Turbidity Voltage: ${jsonData.turbidityVoltage} V`);
                     console.log(`🧪 Turbidity NTU: ${jsonData.turbidityNTU}`);
 
-                    let status = "Safe";
+                   let status = "Safe";
                     if (jsonData.turbidityNTU > 0 && jsonData.turbidityNTU <= 1) {
                         status = "Drinkable";
                     } else if (jsonData.turbidityNTU > 1 && jsonData.turbidityNTU <= 5) {
                         status = "Clear";
-                    } else if (jsonData.turbidityNTU > 5 && jsonData.turbidityNTU <= 25) {
+                    } else if (jsonData.turbidityNTU > 5 && jsonData.turbidityNTU <= 10) {
                         status = "Slightly Cloudy";
-                    } else if (jsonData.turbidityNTU > 25 && jsonData.turbidityNTU <= 50) {
+                    } else if (jsonData.turbidityNTU > 10 && jsonData.turbidityNTU <= 20) {
                         status = "Cloudy";
-                    } else if (jsonData.turbidityNTU > 50 && jsonData.turbidityNTU <= 100) {
+                    } else if (jsonData.turbidityNTU > 20 && jsonData.turbidityNTU <= 30) {
                         status = "Very Cloudy";
-                    } else if (jsonData.turbidityNTU > 100) {
+                    } else if (jsonData.turbidityNTU > 30) {
                         status = "Highly Polluted";
                     } else {
                         status = "Sensor is not submerged in water";
