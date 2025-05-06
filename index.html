@@ -53,26 +53,29 @@
                 </div>
             </p>
         </div>
-        <div class="measurement-box glass">
-            <h2>Status</h2>
-            <p id="status">
+        <div class="measurement-box glass water-card">
+            <h2>Water Quality</h2>
+            <div id="water">
                 <div class="gauge-container">
-                    <div class="gauge" style="--percent: 75">
-                    <div class="gauge-bg"></div>
-                    <div class="gauge-fill"></div>
-                    <div class="gauge-center">
-                        <span class="gauge-label">75%</span>
-                    </div>
+                    <div class="gauge water-gauge">
+                        <div class="gauge-bg"></div>
+                        <div class="gauge-fill"></div>
+                        <div class="gauge-center">
+                            <span class="gauge-label">0%</span>
+                        </div>
                     </div>
                 </div>
-            </p>
+                <div class="water-remark">
+                    <span id="waterQualityRemark">Evaluating...</span>
+                </div>
+            </div>
         </div>
     </div>
 
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 
 
-    <script>
+    <!-- <script>
         const socket = io();
 
         socket.on('connect', () => {
@@ -89,7 +92,79 @@
             else if (data.waterLevel >= 15) status = "Warning";
             document.getElementById('status').innerText = status;
         });
-    </script>
+    </script> -->
+
+    <script>
+        function updateGauge(id, value) {
+          const container = document.getElementById(id);
+          const gauge = container.querySelector('.gauge');
+          const label = container.querySelector('.gauge-label');
+
+            const remark = document.getElementById("waterQualityRemark");
+      
+          if (gauge && label) {
+            gauge.style.setProperty('--percent', value);
+      
+            // Get the base hue set in CSS
+            const baseHue = getComputedStyle(gauge).getPropertyValue('--base-hue').trim();
+            
+            // Calculate new lightness: lower lightness for higher values (darker)
+            const lightness = 70 - value * 0.4; // from 70% to ~30%
+            const newColor = `hsl(${baseHue}, 60%, ${lightness}%)`;
+      
+            // Update the dynamic start color
+            gauge.style.setProperty('--start-color', newColor);
+            label.textContent = `${value}%`;
+
+
+            if (value >= 95) {
+                remark.textContent = "Excellent - Drinkable";
+            } else if (value >= 80) {
+                remark.textContent = "Good - Generally Safe";
+            } else if (value >= 60) {
+                remark.textContent = "Fair - Needs Treatment";
+            } else if (value >= 40) {
+                remark.textContent = "Poor - Not Safe";
+            } else if (value >= 20) {
+                remark.textContent = "Bad - Highly Polluted";
+            } else {
+                remark.textContent = "Very Bad - Toxic Level";
+            }
+          }
+
+          
+        }
+      
+        // Simulate data updates
+        setInterval(() => {
+          updateGauge('temp', Math.floor(Math.random() * 101));
+          updateGauge('humidity', Math.floor(Math.random() * 101));
+          updateGauge('water', Math.floor(Math.random() * 101));
+          updateGauge('status', Math.floor(Math.random() * 101));
+        }, 2000);
+
+
+        // function updateWaterQuality(percentage) {
+        //     const label = document.querySelector(".gauge-label");
+        //     const remark = document.getElementById("waterQualityRemark");
+
+        //     label.textContent = `${percentage}%`;
+
+        //     if (percentage >= 95) {
+        //         remark.textContent = "Excellent - Drinkable";
+        //     } else if (percentage >= 80) {
+        //         remark.textContent = "Good - Generally Safe";
+        //     } else if (percentage >= 60) {
+        //         remark.textContent = "Fair - Needs Treatment";
+        //     } else if (percentage >= 40) {
+        //         remark.textContent = "Poor - Not Safe";
+        //     } else if (percentage >= 20) {
+        //         remark.textContent = "Bad - Highly Polluted";
+        //     } else {
+        //         remark.textContent = "Very Bad - Toxic Level";
+        //     }
+        // }
+      </script>
     
 </body>
 </html>
