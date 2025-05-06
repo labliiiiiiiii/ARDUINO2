@@ -103,29 +103,38 @@
     
             const temperature = data.temperature != null ? Number(data.temperature.toFixed(1)) : null;
             const humidity = data.humidity != null ? Number(data.humidity.toFixed(1)) : null;
+            const voltage = data.turbidityVoltage != null ? Number(data.turbidityVoltage.toFixed(2)) : null;
             const ntu = data.turbidityNTU != null ? Number(data.turbidityNTU.toFixed(1)) : null;
 
             if (temperature !== null) updateGauge('temp', temperature, `${temperature}°C`);
             if (humidity !== null) updateGauge('humidity', humidity, `${humidity}%`);
 
-            // Compute clarity for water quality
-            if (ntuElem !== null) {
+            // 🧪 NTU → Clarity % and Status
+            if (ntu !== null) {
                 let clarityPercent = 100 - Math.min(ntu, 100);
                 clarityPercent = Math.max(0, Math.min(100, Number(clarityPercent.toFixed(0))));
-                updateGauge('water', clarityPercent);
 
-            const remark = document.getElementById("waterQualityRemark");
-            if (remark) remark.innerText = status;
+                updateGauge('water', clarityPercent, `${clarityPercent}%`);
+
+                // 🧾 Status remark
+                const remark = document.getElementById("waterQualityRemark");
+                if (remark) remark.innerText = `${status} (NTU: ${ntu})`;
+
+                // Optional raw NTU display
+                const ntuElem = document.getElementById('ntu');
+                if (ntuElem) ntuElem.innerText = `${ntu}`;
             }
-            // Update gauge
-            updateGauge('water', clarityPercent);
-    
-            // Optional status label
-            const statusElement = document.getElementById('status');
-            let status = data.status;
 
-        if (statusElement) statusElement.innerText = status;
+            // Optional voltage display
+            const voltageElem = document.getElementById('voltage');
+            if (voltageElem && voltage !== null) voltageElem.innerText = `${voltage} V`;
+
+            // Optional: raw status (hidden or elsewhere)
+            const statusElem = document.getElementById("status");
+            if (statusElem) statusElem.innerText = status;
         });
+
+        
     
         // OPTIONAL: Demo data simulation (comment out in production)
         // setInterval(() => {
