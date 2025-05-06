@@ -64,99 +64,53 @@
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 
     <script>
-        // Connect to server via Socket.IO
+        // Initialize socket with the correct server URL and port
         const socket = io('http://localhost:3000', {
             transports: ['polling']
         });
-    
+
         socket.on('connect', () => {
             console.log("✅ Connected to server via Socket.io with ID:", socket.id);
         });
-    
+
         socket.on('connect_error', (error) => {
             console.error("❌ Connection error:", error.message);
         });
-    
-        // Update visual gauge dynamically
-        function updateGauge(id, value) {
-            const container = document.getElementById(id);
-            const gauge = container.querySelector('.gauge');
-            const label = container.querySelector('.gauge-label');
-            const remark = document.getElementById("waterQualityRemark");
-    
-            if (gauge && label) {
-                gauge.style.setProperty('--percent', value);
-    
-                const baseHue = getComputedStyle(gauge).getPropertyValue('--base-hue').trim();
-                const lightness = 70 - value * 0.4;
-                const newColor = `hsl(${baseHue}, 60%, ${lightness}%)`;
-    
-                gauge.style.setProperty('--start-color', newColor);
-                label.textContent = `${value}%`;
-    
-                // Set qualitative label
-                if (remark) {
-                    if (value >= 95) {
-                        remark.textContent = "Excellent - Drinkable";
-                    } else if (value >= 80) {
-                        remark.textContent = "Good - Generally Safe";
-                    } else if (value >= 60) {
-                        remark.textContent = "Fair - Needs Treatment";
-                    } else if (value >= 40) {
-                        remark.textContent = "Poor - Not Safe";
-                    } else if (value >= 20) {
-                        remark.textContent = "Bad - Highly Polluted";
-                    } else {
-                        remark.textContent = "Very Bad - Toxic Level";
-                    }
-                }
-            }
-        }
-    
-        // Handle sensor data from server
-        socket.on('sensorData', function (data) {
+
+        socket.on('sensorData', function(data) {
             console.log("📊 Received data:", data);
-    
-            const tempElem = document.getElementById('temp');
-            if (tempElem) tempElem.innerText = data.temperature?.toFixed(1) ?? "--";
+            
+            // Update basic readings
+            document.getElementById('temp').innerText = data.temperature?.toFixed(1) || "--";
+            document.getElementById('humidity').innerText = data.humidity?.toFixed(1) || "--";
+            document.getElementById('quality').innerText = data.waterQuality?.toFixed(1) || "--";
+            
+            // Update turbidity readings
+            document.getElementById('voltage').innerText = data.turbidityVoltage?.toFixed(2) || "--";
+            document.getElementById('ntu').innerText = data.turbidityNTU?.toFixed(1) || "--";
 
-            const humidityElem = document.getElementById('humidity');
-            if (humidityElem) humidityElem.innerText = data.humidity?.toFixed(1) ?? "--";
+            // Convert NTU to percentage clarity (example scale: 0 NTU = 100%, 100+ NTU = 0%)
+            let clarityPercent = 100 - Math.min(data.turbidityNTU, 100); // clamp max NTU to 100 for display
+            clarityPercent = Math.max(0, Math.min(100, clarityPercent.toFixed(0)));
 
-            const qualityElem = document.getElementById('quality');
-            if (qualityElem) qualityElem.innerText = data.waterQuality?.toFixed(1) ?? "--";
-
-            const voltageElem = document.getElementById('voltage');
-            if (voltageElem) voltageElem.innerText = data.turbidityVoltage?.toFixed(2) ?? "--";
-
-            const ntuElem = document.getElementById('ntu');
-            if (ntuElem) ntuElem.innerText = data.turbidityNTU?.toFixed(1) ?? "--";
-
-    
-            // Convert NTU to clarity percentage
-            let clarityPercent = 100 - Math.min(data.turbidityNTU, 100);
-            clarityPercent = Math.max(0, Math.min(100, Number(clarityPercent.toFixed(0))));
-
-    
-            // Update gauge
+            // Update gauge and label
             updateGauge('water', clarityPercent);
-    
-            // Optional status label
+
+            // Update status label if you still want it separately
             const statusElement = document.getElementById('status');
             let status = data.status;
             if (!status) {
-                const ntu = data.turbidityNTU;
-                if (ntu >= 0 && ntu <= 1) {
+                if (data.turbidityNTU >= 0 && data.turbidityNTU <= 1) {
                     status = "Drinkable";
-                } else if (ntu > 1 && ntu <= 5) {
+                } else if (data.turbidityNTU > 1 && data.turbidityNTU <= 5) {
                     status = "Clear";
-                } else if (ntu > 5 && ntu <= 25) {
+                } else if (data.turbidityNTU > 5 && data.turbidityNTU <= 25) {
                     status = "Slightly Cloudy";
-                } else if (ntu > 25 && ntu <= 50) {
+                } else if (data.turbidityNTU > 25 && data.turbidityNTU <= 50) {
                     status = "Cloudy";
-                } else if (ntu > 50 && ntu <= 100) {
+                } else if (data.turbidityNTU > 50 && data.turbidityNTU <= 100) {
                     status = "Very Cloudy";
-                } else if (ntu > 100) {
+                } else if (data.turbidityNTU > 100) {
                     status = "Highly Polluted";
                 } else {
                     status = "Sensor is not submerged in water";
@@ -164,13 +118,16 @@
             }
             if (statusElement) statusElement.innerText = status;
         });
-    
-        // OPTIONAL: Demo data simulation (comment out in production)
+
+        // REMOVE this part if using real-time Socket data
         setInterval(() => {
             updateGauge('temp', Math.floor(Math.random() * 101));
             updateGauge('humidity', Math.floor(Math.random() * 101));
         }, 2000);
-    </script>
+
+
+      </script>
+
 
       
       
